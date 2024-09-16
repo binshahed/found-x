@@ -1,9 +1,14 @@
-import { title, subtitle } from "@/src/components/primitives";
+import Landing from "@/src/components/modules/home/Landing";
+import RecentPost from "@/src/components/modules/home/RecentPost";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <h1>home page</h1>
-    </section>
+    <>
+      <Landing />
+      <Suspense fallback={<p>Loading...</p>}>
+        <RecentPost />
+      </Suspense>
+    </>
   );
 }
