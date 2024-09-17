@@ -13,6 +13,7 @@ import clsx from "clsx";
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/UI/theme-switch";
 import { Logo } from "@/src/components/icons";
+import AvatarDropDown from "./UI/AvatarDropDown";
 
 export const Navbar = () => {
   const rightItems = <NextLink href="/register">Register</NextLink>;
@@ -51,6 +52,9 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{rightItems}</NavbarItem>
+        <NavbarItem className="hidden lg:flex">
+          <AvatarDropDown />
+        </NavbarItem>
       </NavbarContent>
       <NavbarMenu>
         {rightItems}
