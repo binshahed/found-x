@@ -5,34 +5,46 @@ import { NextRequest } from "next/server";
 
 const AuthRoutes = ["/login", "/register"];
 
+const roleBasedRouters: any = {
+  USER: [/^\/profile/],
+  ADMIN: [/^\/profile/]
+};
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   console.log(pathname);
 
-  let user = undefined;
+  let user: { name: string; token: string; role: string } | undefined =
+    undefined;
 
-  user = {
-    name: "shahed",
-    token: "token",
-    role: "admin"
-  };
+  // user = {
+  //   name: "shahed",
+  //   token: "token",
+  //   role: "ADMIN"
+  // };
 
-  if (user) {
+  if (!user) {
     if (AuthRoutes.includes(pathname)) {
+      return NextResponse.next();
+    } else {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
+  if (user?.role && roleBasedRouters[user?.role]) {
+    const routes: RegExp[] = roleBasedRouters[user?.role];
+    if (routes.some((route) => pathname.match(route))) {
+      return NextResponse.next();
+    } else {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
-  //   if (user?.name) {
-  //     return NextResponse.next();
-  //   } else {
-  //     return NextResponse.redirect(new URL("/login", request.url));
-  //   }
   return NextResponse.redirect(new URL("/", request.url));
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/profile"
+  matcher: ["/profile", "/admin", "/login", "/register"]
 };
