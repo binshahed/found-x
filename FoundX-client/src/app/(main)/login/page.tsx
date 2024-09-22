@@ -6,35 +6,37 @@ import Container from "@/src/components/UI/Container";
 import { Button } from "@nextui-org/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginValidationSchema } from "@/src/schemas/login.schema";
-import { FieldValues, SubmitHandler } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "@/src/services/authService";
-import { toast } from "sonner";
 import { Spinner } from "@nextui-org/spinner";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useUser } from "@/src/context/user.provider";
+import { useUserLogin } from "@/src/hooks/auth.hook";
+import { useEffect } from "react";
 
 const Login = () => {
-  const {
-    mutate: handleRegister,
-    data,
-    isPending,
-    isSuccess
-  } = useMutation({
-    mutationKey: ["login_user"],
-    mutationFn: (userData: TUserData) => loginUser(userData),
-    onSuccess: (data) => {
-      console.log(data);
+  const router = useRouter(); // Use router here for redirection
+  const searchParams = useSearchParams();
+  const redirectToReferrer = searchParams.get("redirect") || "/";
 
-      toast.success("User Logged in Successfully");
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    }
-  });
+  const { setIsLoading: userLoading, isLoading } = useUser();
+
+  const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
 
   const handleSubmit = async (formData: TUserData) => {
     formData.profilePhoto = "https://rb.gy/kouhhq";
-    handleRegister(formData);
+    handleUserLogin(formData);
+    userLoading(true);
   };
+
+  useEffect(() => {
+    if (!isPending && isSuccess) {
+      if (redirectToReferrer) {
+        router.refresh();
+        router.push(redirectToReferrer);
+      } else {
+        router.push("/");
+      }
+    }
+  }, [isPending, isSuccess]);
 
   return (
     <>
@@ -46,7 +48,7 @@ const Login = () => {
       <Container>
         <div className="h-[calc(100vh-88px)] flex w-full justify-center align-middle items-center">
           <div className="w-full md:w-3/6 lg:w-3/6 dark:bg-gray-900 bg-gray-100 p-10 rounded-[10px] shadow-lg">
-            <h1 className=" mx-auto text- text-4xl font-thin">
+            <h1 className="mx-auto text-4xl font-thin">
               Hello <br /> <span className="font-bold">Welcome</span>
             </h1>
             <FoundXForm
@@ -61,7 +63,7 @@ const Login = () => {
                 errorMessage="Please enter your email address"
               />
               <FoundXInput
-                className="my- 4"
+                className="my-4"
                 label="Password"
                 name="password"
                 type="password"

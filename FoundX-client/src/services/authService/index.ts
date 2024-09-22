@@ -3,6 +3,8 @@
 import envConfig from "@/src/config/envConfig";
 import { service } from "@/src/lib/axiosInstance";
 import { cookies } from "next/headers";
+import { jwtDecode } from "jwt-decode";
+import { redirect } from "next/navigation";
 
 export const registerUser = async (userData: TUserData) => {
   try {
@@ -29,23 +31,38 @@ export const loginUser = async (userData: TUserData) => {
       cookies().set("accessToken", data?.data?.accessToken);
       cookies().set("refreshToken", data?.data?.refreshToken);
     }
+    console.log("login data", data);
+
     return data;
   } catch (error: any) {
-    console.log("error", error?.response);
+    console.log("error", error);
 
-    throw new Error(error);
+    throw new Error(error?.data);
   }
 };
 
-export const getUser = async (userData: TUserData) => {
-  const accessToken = cookies().get("accessToken")?.name;
+export const getUser = async () => {
+  const accessToken = cookies().get("accessToken")?.value;
   let getDecodedToken = null;
+
   if (accessToken) {
     try {
-      // getDecodedToken = jwt.verify(accessToken, envConfig.jwtSecret);
+      getDecodedToken = await jwtDecode(accessToken);
+      return getDecodedToken;
     } catch (error) {
       console.log("Invalid token", error);
       throw new Error("Invalid token");
     }
+  }
+};
+
+export const logout = async () => {
+  try {
+    cookies().delete("accessToken");
+    cookies().delete("refreshToken");
+
+    redirect("/login");
+  } catch (error) {
+    throw new Error("Failed to log out.");
   }
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { logout } from "@/src/services/authService";
 import {
   Dropdown,
   DropdownTrigger,
@@ -48,7 +49,7 @@ const AvatarDropDown = () => {
           </Link>
         </DropdownItem>
 
-        <DropdownItem key="logout" color="danger">
+        <DropdownItem key="logout" color="danger" onClick={() => logout()}>
           Log Out
         </DropdownItem>
       </DropdownMenu>
