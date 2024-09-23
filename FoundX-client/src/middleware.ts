@@ -14,14 +14,10 @@ const roleBasedRouters: any = {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  console.log(pathname);
-
   let user: { name: string; token: string; role: string } | undefined =
     undefined;
 
   user = await getUser();
-
-  console.log("user", user);
 
   if (!user) {
     if (AuthRoutes.includes(pathname)) {

@@ -1,3 +1,5 @@
+"use client";
+
 import React, {
   Dispatch,
   ReactNode,
@@ -16,19 +18,16 @@ interface IUserProvider {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-// Initialize the context with default values (or undefined)
-const UserContext = createContext<IUserProvider | undefined>(undefined);
+export const UserContext = createContext<IUserProvider | undefined>(undefined);
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<TUserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log("C user", user);
-
   const handleUser = async () => {
     try {
-      const user = await getUser();
-      setUser(user);
+      const fetchedUser = await getUser();
+      setUser(fetchedUser);
     } finally {
       setIsLoading(false);
     }
@@ -36,7 +35,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     handleUser();
-  }, [isLoading]);
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>

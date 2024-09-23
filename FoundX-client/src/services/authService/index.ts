@@ -1,6 +1,5 @@
 "use server";
 
-import envConfig from "@/src/config/envConfig";
 import { service } from "@/src/lib/axiosInstance";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
@@ -31,12 +30,9 @@ export const loginUser = async (userData: TUserData) => {
       cookies().set("accessToken", data?.data?.accessToken);
       cookies().set("refreshToken", data?.data?.refreshToken);
     }
-    console.log("login data", data);
 
     return data;
   } catch (error: any) {
-    console.log("error", error);
-
     throw new Error(error?.data);
   }
 };
@@ -56,12 +52,11 @@ export const getUser = async () => {
   }
 };
 
-export const logout = async () => {
+export const logout = () => {
   try {
     cookies().delete("accessToken");
     cookies().delete("refreshToken");
-
-    redirect("/login");
+    window.location.reload();
   } catch (error) {
     throw new Error("Failed to log out.");
   }

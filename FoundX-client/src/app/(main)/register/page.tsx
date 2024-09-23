@@ -11,8 +11,14 @@ import { registerUser } from "@/src/services/authService";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Spinner } from "@nextui-org/spinner";
+import { useUser } from "@/src/context/user.provider";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Register = () => {
+  const { setIsLoading: userLoading, isLoading } = useUser();
+  const searchParams = useSearchParams();
+  const redirectToReferrer = searchParams.get("redirect") || "/";
+  const router = useRouter();
   const {
     mutate: handleRegister,
     data,
@@ -21,7 +27,12 @@ const Register = () => {
   } = useMutation({
     mutationKey: ["register_user"],
     mutationFn: (userData: TUserData) => registerUser(userData),
-    onSuccess: (data) => toast.success("User Registration Success"),
+    onSuccess: (data) => {
+      toast.success("User Registration Success");
+      toast.success("User Logged in Successfully");
+      router.refresh();
+      router.push(redirectToReferrer);
+    },
     onError: (error) => {
       console.log(error);
 
@@ -32,6 +43,7 @@ const Register = () => {
   const handleSubmit = async (formData: TUserData) => {
     formData.profilePhoto = "https://rb.gy/kouhhq";
     handleRegister(formData);
+    userLoading(true);
   };
 
   if (isPending) {

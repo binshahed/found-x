@@ -9,8 +9,9 @@ import { loginValidationSchema } from "@/src/schemas/login.schema";
 import { Spinner } from "@nextui-org/spinner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/src/context/user.provider";
-import { useUserLogin } from "@/src/hooks/auth.hook";
-import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { loginUser } from "@/src/services/authService";
 
 const Login = () => {
   const router = useRouter(); // Use router here for redirection
@@ -19,24 +20,29 @@ const Login = () => {
 
   const { setIsLoading: userLoading, isLoading } = useUser();
 
-  const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
+  const {
+    mutate: handleUserLogin,
+    data,
+    isPending,
+    isSuccess
+  } = useMutation({
+    mutationKey: ["login_user"],
+    mutationFn: (userData: TUserData) => loginUser(userData),
+    onSuccess: (data) => {
+      toast.success("User Logged in Successfully");
+      router.refresh();
+      router.push(redirectToReferrer);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
 
   const handleSubmit = async (formData: TUserData) => {
     formData.profilePhoto = "https://rb.gy/kouhhq";
     handleUserLogin(formData);
     userLoading(true);
   };
-
-  useEffect(() => {
-    if (!isPending && isSuccess) {
-      if (redirectToReferrer) {
-        router.refresh();
-        router.push(redirectToReferrer);
-      } else {
-        router.push("/");
-      }
-    }
-  }, [isPending, isSuccess]);
 
   return (
     <>
