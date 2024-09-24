@@ -34,7 +34,27 @@ const CreatePost = () => {
     <div className="w-full">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <FoundXInput name="title" />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <FoundXInput name="title" label="Title" />
+            </div>
+            <div>
+              <FoundXInput name="description" label="Found On" />
+            </div>
+            <div>
+              <FoundXInput name="location" label="Location" />
+            </div>
+            <div>
+              <FoundXInput name="city" label="City" />
+            </div>
+            <div>
+              <FoundXInput name="category" label="Category" />
+            </div>
+            <div>
+              <FoundXInput name="uploadImage" label="itemImages" />
+            </div>
+          </div>
+
           <Divider className="my-4" />
           <div className="flex justify-between">
             <p>Owner verification question</p>
@@ -44,7 +64,10 @@ const CreatePost = () => {
 
           {fields.map((field, index) => (
             <div key={field?.id}>
-              <FoundXInput name={`questions.${index}.value`} />
+              <FoundXInput
+                name={`questions.${index}.value`}
+                label={`Ques No ${index + 1}`}
+              />
             </div>
           ))}
 

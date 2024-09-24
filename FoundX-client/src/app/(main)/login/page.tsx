@@ -32,6 +32,7 @@ const Login = () => {
       toast.success("User Logged in Successfully");
       router.refresh();
       router.push(redirectToReferrer);
+      window.location.reload();
     },
     onError: (error) => {
       toast.error(error.message);

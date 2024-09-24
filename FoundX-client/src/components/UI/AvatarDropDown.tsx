@@ -1,3 +1,4 @@
+import { PROTECTED_ROUTE } from "@/src/constant/protectedRoutes";
 import { useUser } from "@/src/context/user.provider";
 import { logout } from "@/src/services/authService";
 import {
@@ -8,12 +9,17 @@ import {
 } from "@nextui-org/dropdown";
 import { User } from "@nextui-org/user";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const AvatarDropDown = () => {
   const { user, setIsLoading } = useUser();
-
+  const pathName = usePathname();
+  const router = useRouter();
   const handleLogout = () => {
     logout();
+    // if (PROTECTED_ROUTE.some((route) => pathName.match(route))) {
+    //   router.push("/");
+    // }
     window.location.reload();
   };
   return (
