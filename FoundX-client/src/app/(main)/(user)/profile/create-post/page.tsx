@@ -20,6 +20,9 @@ import Image from "next/image";
 import FoundXTextArea from "@/src/components/form/FoundXTextArea";
 import { TrashIcon } from "@/src/components/icons";
 import { useUser } from "@/src/context/user.provider";
+import { useCreatePost } from "@/src/hooks/post.hook";
+import { useRouter } from "next/navigation";
+import Loading from "@/src/components/UI/Loading";
 
 const CreatePost = () => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -27,7 +30,15 @@ const CreatePost = () => {
   const methods = useForm();
   const { control, handleSubmit } = methods;
 
+  const {
+    mutate: handleCreatePost,
+    isPending: isPendingCratePost,
+    isSuccess
+  } = useCreatePost();
+
   const { user } = useUser();
+
+  const router = useRouter();
 
   // Destructure the remove function from useFieldArray
   const { fields, append, remove } = useFieldArray({
@@ -46,7 +57,7 @@ const CreatePost = () => {
 
     for (let image of imageFiles) formData.append("itemImages", image);
 
-    console.log(formData.getAll("itemImages"));
+    handleCreatePost(formData);
   };
 
   //question multiple fields
@@ -95,106 +106,113 @@ const CreatePost = () => {
     remove(index); // Remove the field from questions array
   };
 
-  return (
-    <div className="w-full">
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-            <div>
-              <FoundXInput name="title" label="Title" />
-            </div>
-            <div>
-              <FoundXDatePicker name="dateFound" label="Found Date" />
-            </div>
-            <div>
-              <FoundXSelect name="city" label="City" options={distict} />
-            </div>
-            <div>
-              <FoundXInput name="location" label="Location" />
-            </div>
-            <div>
-              <FoundXSelect
-                name="category"
-                label="Category"
-                options={categoriesOptions}
-                loading={isPending}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="image"
-                className="w-full h-full block rounded-xl py-2 px-3 border border-default-400 text-xs cursor-pointer"
-              >
-                Image Upload
-              </label>
-              <input
-                className="hidden"
-                id="image"
-                type="file"
-                name="image"
-                multiple
-                accept="image/png, image/jpeg"
-                onChange={(e) => handleImageChange(e.target.files)}
-              />
-            </div>
-          </div>
+  if (!isPending && isSuccess) {
+    router.push("/");
+  }
 
-          {/* Image Previews */}
-          <div className="flex flex-wrap">
-            {imagePreviews.length > 0 &&
-              imagePreviews?.map((image, index) => (
-                <div key={index} className="relative m-4">
-                  <Image
-                    src={image}
-                    alt=""
-                    width={150}
-                    height={50}
-                    className="p-2 border border-dashed rounded-md object-cover"
-                  />
+  return (
+    <>
+      {isPendingCratePost && <Loading />}
+      <div className="w-full">
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+              <div>
+                <FoundXInput name="title" label="Title" />
+              </div>
+              <div>
+                <FoundXDatePicker name="dateFound" label="Found Date" />
+              </div>
+              <div>
+                <FoundXSelect name="city" label="City" options={distict} />
+              </div>
+              <div>
+                <FoundXInput name="location" label="Location" />
+              </div>
+              <div>
+                <FoundXSelect
+                  name="category"
+                  label="Category"
+                  options={categoriesOptions}
+                  loading={isPending}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="image"
+                  className="w-full h-full block rounded-xl py-2 px-3 border border-default-400 text-xs cursor-pointer"
+                >
+                  Image Upload
+                </label>
+                <input
+                  className="hidden"
+                  id="image"
+                  type="file"
+                  name="image"
+                  multiple
+                  accept="image/png, image/jpeg"
+                  onChange={(e) => handleImageChange(e.target.files)}
+                />
+              </div>
+            </div>
+
+            {/* Image Previews */}
+            <div className="flex flex-wrap">
+              {imagePreviews.length > 0 &&
+                imagePreviews?.map((image, index) => (
+                  <div key={index} className="relative m-4">
+                    <Image
+                      src={image}
+                      alt=""
+                      width={150}
+                      height={50}
+                      className="p-2 border border-dashed rounded-md object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleImageRemove(index)}
+                      className="absolute top-[11px] right-2 text-red-700 rounded-full px-[5px]"
+                    >
+                      <TrashIcon />
+                    </button>
+                  </div>
+                ))}
+            </div>
+
+            <div className="mt-4">
+              <FoundXTextArea name="description" label="Description" />
+            </div>
+            <Divider className="my-4" />
+            <div className="flex justify-between">
+              <p>Owner verification question</p>
+              <Button onClick={() => handleFieldAppend()}>Add Ques</Button>
+            </div>
+            <Divider className="my-4" />
+
+            {fields?.map((field, index) => (
+              <div key={field?.id} className="mb-4 flex">
+                <FoundXInput
+                  className="w-11/12"
+                  name={`questions.${index}.value`}
+                  label={`Ques No ${index + 1}`}
+                />
+                <div className="flex m-auto">
                   <button
                     type="button"
-                    onClick={() => handleImageRemove(index)}
-                    className="absolute top-[11px] right-2 text-red-700 rounded-full px-[5px]"
+                    onClick={() => handleFieldRemove(index)} // Call the remove function
+                    className="rounded-full px-[5px] hover:text-red-600"
                   >
                     <TrashIcon />
                   </button>
                 </div>
-              ))}
-          </div>
-
-          <div className="mt-4">
-            <FoundXTextArea name="description" label="Description" />
-          </div>
-          <Divider className="my-4" />
-          <div className="flex justify-between">
-            <p>Owner verification question</p>
-            <Button onClick={() => handleFieldAppend()}>Add Ques</Button>
-          </div>
-          <Divider className="my-4" />
-
-          {fields?.map((field, index) => (
-            <div key={field?.id} className="mb-4 flex">
-              <FoundXInput
-                className="w-11/12"
-                name={`questions.${index}.value`}
-                label={`Ques No ${index + 1}`}
-              />
-              <div className="flex m-auto">
-                <button
-                  type="button"
-                  onClick={() => handleFieldRemove(index)} // Call the remove function
-                  className="rounded-full px-[5px] hover:text-red-600"
-                >
-                  <TrashIcon />
-                </button>
               </div>
-            </div>
-          ))}
+            ))}
 
-          <Button type="submit">Create Post</Button>
-        </form>
-      </FormProvider>
-    </div>
+            <Button type="submit">Create Post</Button>
+          </form>
+        </FormProvider>
+      </div>
+    </>
   );
 };
 

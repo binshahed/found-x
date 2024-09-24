@@ -1,9 +1,9 @@
-import envConfig from "@/src/config/envConfig";
-import { service } from "@/src/lib/axiosInstance";
+"use server";
+import { axiosInstance } from "@/src/lib/axiosInstance";
 
 export const getAllCategories = async () => {
   try {
-    const { data } = await service.get("/item-categories");
+    const { data } = await axiosInstance.get("/item-categories");
     return data?.data;
   } catch (error: any) {
     throw new Error(error?.message);

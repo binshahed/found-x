@@ -1,13 +1,13 @@
 "use server";
 
-import { service } from "@/src/lib/axiosInstance";
+import { axiosInstance } from "@/src/lib/axiosInstance";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { redirect } from "next/navigation";
 
 export const registerUser = async (userData: TUserData) => {
   try {
-    const { data } = await service.post("/auth/register", userData);
+    const { data } = await axiosInstance.post("/auth/register", userData);
 
     if (data?.success) {
       cookies().set("accessToken", data?.data?.accessToken);
@@ -20,7 +20,7 @@ export const registerUser = async (userData: TUserData) => {
 };
 export const loginUser = async (userData: TUserData) => {
   try {
-    const { data } = await service.post("/auth/login", userData, {
+    const { data } = await axiosInstance.post("/auth/login", userData, {
       headers: {
         "Content-Type": "application/json"
       }
