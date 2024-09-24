@@ -1,4 +1,4 @@
-import { Input } from "@nextui-org/input";
+import { Select, SelectItem } from "@nextui-org/select";
 import { useFormContext } from "react-hook-form";
 
 interface TInputProps {
@@ -10,14 +10,26 @@ interface TInputProps {
   name: string;
   className?: string;
   errorMessage?: string;
+  options: TData[];
+  placeholder?: string;
+  loading?: boolean;
 }
 
-const FoundXInput = ({
+interface TData {
+  value: string;
+  label: string;
+}
+
+const FoundXSelect = ({
   variant = "bordered",
   required = false,
   size = "md",
   type = "string",
   name,
+  options,
+  label,
+  placeholder = "Select an option",
+  loading,
   ...restProps
 }: TInputProps) => {
   const {
@@ -26,16 +38,22 @@ const FoundXInput = ({
   } = useFormContext();
 
   return (
-    <Input
+    <Select
+      isLoading={loading}
+      label={label}
+      placeholder={placeholder}
       {...register(name)}
-      type={type}
       variant={variant}
       required={required}
       isInvalid={!!errors[name]}
       size={size}
       {...restProps}
-    />
+    >
+      {options.map((data: TData) => (
+        <SelectItem key={data?.value}>{data.label}</SelectItem>
+      ))}
+    </Select>
   );
 };
 
-export default FoundXInput;
+export default FoundXSelect;

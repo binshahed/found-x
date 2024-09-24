@@ -19,7 +19,7 @@ import { Logo } from "@/src/components/icons";
 import AvatarDropDown from "./UI/AvatarDropDown";
 import { useUser } from "../context/user.provider";
 
-export const Navbar = async () => {
+export const Navbar = () => {
   const { user, isLoading } = useUser();
 
   const rightItems = <NextLink href="/login">Login</NextLink>;

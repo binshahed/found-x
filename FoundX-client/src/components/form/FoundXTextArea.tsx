@@ -1,4 +1,4 @@
-import { Input } from "@nextui-org/input";
+import { Input, Textarea } from "@nextui-org/input";
 import { useFormContext } from "react-hook-form";
 
 interface TInputProps {
@@ -10,14 +10,17 @@ interface TInputProps {
   name: string;
   className?: string;
   errorMessage?: string;
+  placeholder?: string;
 }
 
-const FoundXInput = ({
+const FoundXTextArea = ({
   variant = "bordered",
   required = false,
   size = "md",
   type = "string",
+  label,
   name,
+  placeholder,
   ...restProps
 }: TInputProps) => {
   const {
@@ -26,16 +29,18 @@ const FoundXInput = ({
   } = useFormContext();
 
   return (
-    <Input
+    <Textarea
       {...register(name)}
-      type={type}
+      label={label}
       variant={variant}
+      placeholder={placeholder}
+      disableAnimation
+      disableAutosize
       required={required}
       isInvalid={!!errors[name]}
-      size={size}
       {...restProps}
     />
   );
 };
 
-export default FoundXInput;
+export default FoundXTextArea;

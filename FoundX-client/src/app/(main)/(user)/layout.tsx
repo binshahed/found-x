@@ -6,10 +6,10 @@ const layout = ({ children }: { children: ReactNode }) => {
   return (
     <Container>
       <div className="my-3 flex w-full gap-12">
-        <div className="w-2/5">
+        <div className="md:w-2/5 lg:w-2/5 w-full">
           <Sidebar />
         </div>
-        <div className="w-4/5">{children}</div>
+        <div className="md:w-4/5 lg:w-4/5 w-full">{children}</div>
       </div>
     </Container>
   );

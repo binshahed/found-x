@@ -56,7 +56,7 @@ export const logout = () => {
   try {
     cookies().delete("accessToken");
     cookies().delete("refreshToken");
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     throw new Error("Failed to log out.");
   }

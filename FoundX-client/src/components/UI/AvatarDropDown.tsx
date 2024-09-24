@@ -17,9 +17,9 @@ const AvatarDropDown = () => {
   const router = useRouter();
   const handleLogout = () => {
     logout();
-    // if (PROTECTED_ROUTE.some((route) => pathName.match(route))) {
-    //   router.push("/");
-    // }
+    if (PROTECTED_ROUTE.some((route) => pathName.match(route))) {
+      router.push("/");
+    }
     window.location.reload();
   };
   return (
