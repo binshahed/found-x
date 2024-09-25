@@ -6,6 +6,6 @@ export const getAllCategories = async () => {
     const { data } = await axiosInstance.get("/item-categories");
     return data?.data;
   } catch (error: any) {
-    throw new Error(error?.message);
+    throw new Error(error?.response?.data?.message);
   }
 };

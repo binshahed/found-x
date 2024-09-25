@@ -3,15 +3,15 @@
 import { axiosInstance } from "@/src/lib/axiosInstance";
 import { revalidateTag } from "next/cache";
 
-export const createPost = async (fromData: FormData): Promise<any> => {
+export const createClimeRequest = async (fromData: FormData): Promise<any> => {
   try {
-    const { data } = await axiosInstance.post("/items", fromData, {
+    const { data } = await axiosInstance.post("/claim-request", fromData, {
       headers: {
-        "Content-Type": "multipart/form-data"
+        "Content-Type": "application/json"
       }
     });
 
-    revalidateTag("posts");
+    revalidateTag("claimRequest");
 
     return data;
   } catch (error: any) {

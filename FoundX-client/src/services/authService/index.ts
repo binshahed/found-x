@@ -15,7 +15,7 @@ export const registerUser = async (userData: TUserData) => {
     }
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error?.response?.data?.message);
   }
 };
 export const loginUser = async (userData: TUserData) => {
@@ -33,7 +33,7 @@ export const loginUser = async (userData: TUserData) => {
 
     return data;
   } catch (error: any) {
-    throw new Error(error?.data);
+    throw new Error(error?.response?.data?.message);
   }
 };
 

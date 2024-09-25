@@ -205,6 +205,44 @@ export const TrashIcon = (props: IconSvgProps) => {
   );
 };
 
+export const LocationIcon = (props: IconSvgProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth="1.5"
+      stroke="currentColor"
+      className={`${props?.size ? `size-${props?.size}` : "size-5"}`}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 2.25c4.556 0 7.5 3.366 7.5 7.125 0 5.268-7.5 12.375-7.5 12.375S4.5 14.643 4.5 9.375C4.5 5.616 7.444 2.25 12 2.25zm0 9.375a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5z"
+      />
+    </svg>
+  );
+};
+
+export const ClockIcon = (props: IconSvgProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth="1.5"
+      stroke="currentColor"
+      className={`${props?.size ? `size-${props?.size}` : "size-5"}`}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 6v6h4.5m5.25 0a9.75 9.75 0 1 1-19.5 0 9.75 9.75 0 0 1 19.5 0z"
+      />
+    </svg>
+  );
+};
+
 export const NextUILogo: React.FC<IconSvgProps> = (props) => {
   const { width, height = 40 } = props;
 

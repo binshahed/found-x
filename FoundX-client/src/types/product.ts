@@ -10,6 +10,6 @@ type TPost = {
   isReported: boolean;
   reportCount: number;
   category: string | null;
-  user: string | null;
+  user: TUserData;
   questions: string[];
 };

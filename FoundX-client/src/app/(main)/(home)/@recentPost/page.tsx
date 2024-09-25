@@ -9,9 +9,6 @@ import { delay } from "@/src/utils";
 const RecentPost = async () => {
   const { data: recentPost } = await getRecentPost();
 
-  //   await delay(5000);
-  // console.log(recentPost);
-
   return (
     <Container>
       <div className="section-title my-8">
