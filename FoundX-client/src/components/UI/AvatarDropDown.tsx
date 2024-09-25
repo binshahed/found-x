@@ -17,10 +17,10 @@ const AvatarDropDown = () => {
   const router = useRouter();
   const handleLogout = () => {
     logout();
+    setIsLoading(true);
     if (PROTECTED_ROUTE.some((route) => pathName.match(route))) {
       router.push("/");
     }
-    window.location.reload();
   };
   return (
     <Dropdown placement="bottom-start">

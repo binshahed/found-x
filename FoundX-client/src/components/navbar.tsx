@@ -18,9 +18,12 @@ import { ThemeSwitch } from "@/src/components/UI/theme-switch";
 import { Logo } from "@/src/components/icons";
 import AvatarDropDown from "./UI/AvatarDropDown";
 import { useUser } from "../context/user.provider";
+// import { useRouter } from "next/router";
 
 export const Navbar = () => {
   const { user, isLoading } = useUser();
+
+  // const router = useRouter();
 
   const rightItems = <NextLink href="/login">Login</NextLink>;
 
@@ -67,6 +70,7 @@ export const Navbar = () => {
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
+
         {!user?.role && (
           <NavbarItem className="hidden lg:flex">{rightItems}</NavbarItem>
         )}

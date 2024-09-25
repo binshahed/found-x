@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getRecentPost } from "@/src/services/recentPost";
 import Container from "@/src/components/UI/Container";
 import PostCard from "@/src/components/UI/PostCard";
-import { delay } from "@/src/utils";
+
 
 const RecentPost = async () => {
   const { data: recentPost } = await getRecentPost();
