@@ -14,6 +14,8 @@ import AuthModal from "../../modals/AuthModal";
 
 const ClimePostCard = ({ post }: { post: TPost }) => {
   const { user } = useUser();
+  console.log(post);
+
   return (
     <Card className="w-3/5">
       <CardHeader className="flex gap-3">
@@ -47,17 +49,19 @@ const ClimePostCard = ({ post }: { post: TPost }) => {
       </CardBody>
       <Divider />
       <CardFooter className="flex justify-around">
-        <div>
-          {user?.email ? (
-            <ClamRequestModal
-              buttonText="Claim Request"
-              modalTitle="Claim Request"
-              post={post}
-            />
-          ) : (
-            <AuthModal postId={post?._id} />
-          )}
-        </div>
+        {user?.email !== post?.user?.email && (
+          <div>
+            {user?.email ? (
+              <ClamRequestModal
+                buttonText="Claim Request"
+                modalTitle="Claim Request"
+                post={post}
+              />
+            ) : (
+              <AuthModal postId={post?._id} />
+            )}
+          </div>
+        )}
         <div>
           <Link href="/found-items">Share</Link>
         </div>
